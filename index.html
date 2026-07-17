@@ -2,33 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>H.E.E. Access Terminal</title>
+<title>H.E.E. Internal Access Terminal</title>
 
 <style>
 body{
-    background:#0b0b0b;
+    margin:0;
+    background:#050505;
     color:#00ff66;
     font-family:Consolas,monospace;
-    text-align:center;
-    padding-top:80px;
 }
 
 .container{
-    width:500px;
-    margin:auto;
+    width:700px;
+    margin:60px auto;
     border:2px solid #00aa44;
+    background:#101010;
     padding:30px;
-    background:#111;
+    box-shadow:0 0 20px #003300;
+}
+
+h1{
+    margin-top:0;
 }
 
 input{
-    width:250px;
-    padding:10px;
-    background:#000;
+    width:100%;
+    padding:12px;
+    background:black;
     color:#00ff66;
     border:1px solid #00aa44;
     font-size:18px;
-    text-align:center;
+    box-sizing:border-box;
 }
 
 button{
@@ -38,12 +42,19 @@ button{
     color:#00ff66;
     border:1px solid #00aa44;
     cursor:pointer;
+    font-family:inherit;
 }
 
-#result{
-    margin-top:30px;
-    font-size:30px;
-    min-height:40px;
+button:hover{
+    background:#005500;
+}
+
+#output{
+    margin-top:25px;
+    min-height:170px;
+    white-space:pre-wrap;
+    border-top:1px solid #00aa44;
+    padding-top:20px;
 }
 </style>
 </head>
@@ -52,68 +63,182 @@ button{
 
 <div class="container">
 
-<h2>H.E.E. CODE TERMINAL</h2>
+<h1>H.E.E. INTERNAL TERMINAL</h1>
 
-<p>Enter Access Code</p>
+<p>Enter Access Code or Phrase</p>
 
-<input id="code" maxlength="10">
+<input id="command" placeholder="ENTER CODE">
 
-<br>
+<button onclick="run()">Submit</button>
 
-<button onclick="checkCode()">Submit</button>
-
-<div id="result"></div>
+<div id="output">
+Awaiting Input...
+</div>
 
 </div>
 
 <script>
 
-function checkCode(){
+const responses={
 
-let code=document.getElementById("code").value.trim();
-let result=document.getElementById("result");
+//====================
+// NUMBER CODES
+//====================
 
-switch(code){
+"648":()=>{
+show("SMILE");
 
-case "648":
-
-result.innerHTML="SMILE";
-
-setTimeout(function(){
-
-result.innerHTML="442";
-
+setTimeout(()=>{
+show("442");
 },1500);
+},
 
-break;
+"442":()=>show(`SECONDARY INDEX FOUND
 
-case "001":
-result.innerHTML="Access Granted";
-break;
+STATUS:
+INCOMPLETE
 
-case "404":
-result.innerHTML="Archive Missing";
-break;
+No further information available.`),
 
-case "777":
-result.innerHTML="Maintenance Required";
-break;
+"001":()=>show("ACCESS GRANTED"),
 
-case "999":
-result.innerHTML="Access Denied";
-break;
+"101":()=>show("EMPLOYEE LOGIN VERIFIED"),
 
-default:
-result.innerHTML="Unknown Code";
+"117":()=>show("MEDICAL DEPARTMENT ONLINE"),
 
+"132":()=>show("MAINTENANCE REQUEST QUEUED"),
+
+"155":()=>show("ADMINISTRATIVE RECORDS LOCKED"),
+
+"404":()=>show("ARCHIVE NOT FOUND"),
+
+"777":()=>show(`SYSTEM MAINTENANCE
+
+No action required.`),
+
+"999":()=>show("ACCESS DENIED"),
+
+
+//====================
+// PHRASES
+//====================
+
+"hee":()=>show(`Hazard Evaluation Entity
+
+Internal Network`),
+
+"the factory":()=>show(`ENTRY REDACTED
+
+CLEARANCE LEVEL TOO LOW`),
+
+"archive":()=>show(`Searching...
+
+No archive available.`),
+
+"employee handbook":()=>show(`HANDBOOK
+
+Revision 18.2
+
+Several pages unavailable.`),
+
+"security":()=>show(`Security Office
+
+Clearance Required.`),
+
+"containment":()=>show(`Containment Status
+
+STABLE`),
+
+"maintenance":()=>show(`Maintenance Department
+
+No Active Requests.`),
+
+"orientation":()=>show(`Orientation Complete.`),
+
+"visitor":()=>show(`Visitors must remain escorted.`),
+
+"smile":()=>show(`:)
+
+Thank you for your cooperation.`),
+
+"help":()=>show(`AVAILABLE COMMANDS
+
+HELP
+
+DIRECTORY
+
+STATUS
+
+LOGIN
+
+ARCHIVE
+
+EMPLOYEE
+
+SECURITY`),
+
+"status":()=>show(`Facility Status
+
+NORMAL
+
+Power Stable
+
+Communications Stable`),
+
+"directory":()=>show(`DEPARTMENTS
+
+Security
+Medical
+Maintenance
+Administration
+Archives`),
+
+"employee":()=>show(`Employee Database
+
+No Matching Record.`),
+
+"administrator":()=>show(`Administrator
+
+Unavailable.`),
+
+"hello":()=>show(`Welcome Employee.`),
+
+"who are you":()=>show(`This terminal cannot answer that question.`),
+
+"exit":()=>show("Session Closed.")
+
+};
+
+function show(text){
+document.getElementById("output").textContent=text;
+}
+
+function run(){
+
+let input=document.getElementById("command")
+.value
+.trim()
+.toLowerCase();
+
+if(responses[input]){
+responses[input]();
+}
+else{
+show(`UNKNOWN COMMAND
+
+No results for:
+
+"${input}"`);
 }
 
 }
 
-document.getElementById("code").addEventListener("keydown",function(e){
+document.getElementById("command").addEventListener("keydown",function(e){
+
 if(e.key==="Enter"){
-checkCode();
+run();
 }
+
 });
 
 </script>
